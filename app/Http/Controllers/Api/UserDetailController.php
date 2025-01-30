@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\UserDetail;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserDetailRequest;
 
 class UserDetailController extends Controller
 {
@@ -14,17 +15,7 @@ class UserDetailController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return UserDetail::all();
     }
 
     /**
@@ -33,9 +24,11 @@ class UserDetailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserDetailRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        return UserDetail::create($validated);
     }
 
     /**
@@ -50,26 +43,20 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserDetailRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+
+        $userDetail = UserDetail::findOrFail($id);
+        $userDetail->update($validated);
+
+        return $userDetail;
     }
 
     /**
@@ -80,6 +67,9 @@ class UserDetailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $userDetail = UserDetail::findOrFail($id);
+        $userDetail->delete();
+
+        return response()->json('', 204);
     }
 }
